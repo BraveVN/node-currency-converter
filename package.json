@@ -1,0 +1,26 @@
+{
+  "name": "currency-converter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/BraveVN/node-currency-converter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bin": {
+    "exchangePredict": "./app.js"
+  },
+  "bugs": {
+    "url": "https://github.com/BraveVN/node-currency-converter/issues"
+  },
+  "homepage": "https://github.com/BraveVN/node-currency-converter#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "commander": "^2.15.1"
+  }
+}

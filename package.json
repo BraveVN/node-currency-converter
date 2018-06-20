@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "bin": {
-    "exchangePredict": "./app.js"
+    "exchange": "./app.js"
   },
   "bugs": {
     "url": "https://github.com/BraveVN/node-currency-converter/issues"

@@ -26,14 +26,19 @@ const requests = {
    * @param {object} params
    */
   get: (options, params = {}) => {
-    let date = options && options.date ? options.date : new Date();
-    if (options && !options.endpoint) {
-      throw 'API Endpoint must available.';
+    if (options) {
+      let date = options.date ? options.date : new Date();
+
+      if (!options.endpoint) {
+        throw 'API Endpoint must be available.';
+      }
+
+      params['app_id'] = APP_ID;
+      return axios.get(`${API_URL}/${options.endpoint}/${date}.json`, {params: params})
+                  .then(responseBody)
+                  .catch(reject => console.log(reject));
     }
-    params['app_id'] = APP_ID;
-    return axios.get(`${API_URL}/${options.endpoint}/${date}.json`, {params: params})
-                .then(responseBody)
-                .catch(reject => console.log(reject));
+    throw 'Options is required.';
   }
 };
 
@@ -43,8 +48,9 @@ const Historical = {
    * Get list of exchange rate with date from input
    *
    * @param {string} date
+   * @param {string} base
    */
-  fetch: date => requests.get({ date: formatDate(date), endpoint: HISTORICAL_ENDPOINT })
+  fetch: (date, base) => requests.get({ date: formatDate(date), endpoint: HISTORICAL_ENDPOINT }, { base: base })
 };
 
 /**

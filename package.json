@@ -21,10 +21,10 @@
   "homepage": "https://github.com/BraveVN/node-currency-converter#readme",
   "dependencies": {
     "axios": "^0.18.0",
-    "commander": "^2.15.1"
+    "commander": "^2.15.1",
+    "lodash.round": "^4.0.4"
   },
   "devDependencies": {
-    "faker": "^4.1.0",
     "jest": "^23.1.0"
   }
 }

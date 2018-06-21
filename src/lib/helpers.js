@@ -1,9 +1,5 @@
 /**
- * This lib is used to calcutate the result of Linear Regression algorithm:
- *
- * Regression Equation(y) = a + bx
- * Slope(b) = (NΣXY - (ΣX)(ΣY)) / (NΣX^2 - (ΣX)^2)
- * Intercept(a) = (ΣY - b(ΣX)) / N
+ * This helper is used to define some helper methods for currency.js
  */
 'use strict';
 
@@ -11,63 +7,78 @@
  * Module dependencies.
  */
 const constants = require('../constants/constants');
+const round = require('lodash.round');
 
 /**
- * Return exchange rate which is based on input currency
+ * Calculate the slope of Linear Regression algorithm with formula:
+ * Slope(b) = (NΣXY - (ΣX)(ΣY)) / (NΣX^2 - (ΣX)^2)
  *
- * @param {string} currency
- * @param {object} rates
+ * @param {array} sampleRates
  */
-const getExchangeRate = (currency, rates) => {
-  if (!rates) {
-    throw 'Rates must be provided.'
-  }
-  return rates[currency];
-}
-
-const calculateExchangeRate = (sampleRates, nextDataPoint) => {
-  return calculateIntercept(sampleRates) + calculateSlope(sampleRates) * nextDataPoint;
-}
-
-// X: month
-// Y: exRate for X
-// N: constants.DATA_POINTS = 12
 const calculateSlope = sampleRates => {
   let numerator = constants.DATA_POINTS * totalProduct(sampleRates) - totalMonth(sampleRates) * totalExchangeRate(sampleRates);
   let denominator = constants.DATA_POINTS * totalSquareMonth(sampleRates) - square(totalMonth(sampleRates));
-  return numerator / denominator;
+  return round(numerator / denominator, 4);
 }
 
+/**
+ * Calculate the intercept of Linear Regression algorithm with formula:
+ * Intercept(a) = (ΣY - b(ΣX)) / N
+ *
+ * @param {array} sampleRates
+ */
 const calculateIntercept = sampleRates => {
   let slope = calculateSlope(sampleRates);
   let numerator = totalExchangeRate(sampleRates) - slope * totalMonth(sampleRates);
   let denominator = constants.DATA_POINTS;
-  return numerator / denominator;
+  return round(numerator / denominator, 4);
 }
 
-// X^2
+/**
+ * Calculate square of a number (X^2)
+ *
+ * @param {number} value
+ */
 const square = value => value * value;
 
-// X * Y
+/**
+ * Calculate the product of month & its exchange rate (X * Y)
+ *
+ * @param {object} { month: month, rate: rate }
+ */
 const product = ({ month, rate }) => month * rate;
 
-// ΣX
+/**
+ * Calculate the total of month (ΣX)
+ *
+ * @param {array} sampleRates
+ */
 const totalMonth = sampleRates => sampleRates.reduce((accumulator, currentValue) => accumulator + currentValue.month, 0);
 
-// ΣY
+/**
+ * Calculate the total of exchange rate (ΣY)
+ *
+ * @param {array} sampleRates
+ */
 const totalExchangeRate = sampleRates => sampleRates.reduce((accumulator, currentValue) => accumulator + currentValue.rate, 0);
 
-// ΣXY
+/**
+ * Calculate the total product of month & its exchange rate (ΣXY)
+ *
+ * @param {array} sampleRates
+ */
 const totalProduct = sampleRates => sampleRates.reduce((accumulator, currentValue) => accumulator + product(currentValue), 0)
 
-// ΣX^2
+/**
+ * Calculate the total of square of month (ΣX^2)
+ *
+ * @param {array} sampleRates
+ */
 const totalSquareMonth = sampleRates => sampleRates.reduce((accumulator, currentValue) => accumulator + square(currentValue.month), 0)
 
 module.exports = {
-  calculateExchangeRate,
   calculateIntercept,
   calculateSlope,
-  getExchangeRate,
   product,
   square,
   totalExchangeRate,

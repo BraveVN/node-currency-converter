@@ -36,7 +36,7 @@ const requests = {
       params['app_id'] = APP_ID;
       return axios.get(`${API_URL}/${options.endpoint}/${date}.json`, {params: params})
                   .then(responseBody)
-                  .catch(reject => console.log(reject));
+                  .catch(() => console.error('Something went wrong on API server!'));
     }
     throw 'Options is required.';
   }

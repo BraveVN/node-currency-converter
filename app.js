@@ -6,9 +6,9 @@
  * Module dependencies.
  */
 const program = require('commander');
-const axios = require('./services/axios');
-const currency = require('./lib/currency');
-const constants = require('./constants/constants');
+const axios = require('./src/services/axios');
+const currency = require('./src/lib/currency');
+const constants = require('./src/constants/constants');
 const nextDataPoint = constants.DATA_POINTS + 1;
 
 /**
@@ -22,10 +22,11 @@ const getExchangeRate = async (fromCurrency, toCurrency) => {
   Promise.all(promises).then(res => {
     let sampleRates = res.map((sample, index) => ({
       month: index + 1,
-      rate: currency.getExchangeRate(toCurrency, sample.rates)
+      rate: currency.getExchangeRate(sample.rates, toCurrency)
     }));
 
-    currency.calculateExchangeRate(sampleRates, nextDataPoint);
+    let predictedValue = currency.predictExchangeRate(sampleRates, nextDataPoint);
+    console.table({ date: '01/15/2017', baseCurrency: fromCurrency, destCurrency: toCurrency, exchangeRate: predictedValue });
   });
 }
 

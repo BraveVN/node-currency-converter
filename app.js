@@ -7,7 +7,7 @@
  */
 const program = require('commander');
 const axios = require('./services/axios');
-const currency = require('./services/currency');
+const currency = require('./lib/currency');
 
 /**
  * Hanlde logic for predicting exchange rate

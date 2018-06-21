@@ -58,7 +58,7 @@ const Historical = {
  *
  * @param {string} value
  */
-function formatDate(value) {
+const formatDate = value => {
   let day = new Date(value);
   let year = day.getFullYear();
   let month = day.getMonth() + 1;

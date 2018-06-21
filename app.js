@@ -8,6 +8,8 @@
 const program = require('commander');
 const axios = require('./services/axios');
 const currency = require('./lib/currency');
+const constants = require('./constants/constants');
+const nextDataPoint = constants.DATA_POINTS + 1;
 
 /**
  * Hanlde logic for predicting exchange rate
@@ -15,12 +17,16 @@ const currency = require('./lib/currency');
  * @param {string} fromCurrency
  * @param {string} toCurrency
  */
-function getExchangeRate(fromCurrency, toCurrency) {
-  axios.Historical.fetch('01/15/2016', fromCurrency).then(res => {
-    let rates = res.rates;
-    let exchangeRate = currency.getExchangeRate(toCurrency, rates);
-    console.log(exchangeRate);
-  })
+const getExchangeRate = async (fromCurrency, toCurrency) => {
+  let promises = constants.dateSample.map(date => axios.Historical.fetch(date, fromCurrency));
+  Promise.all(promises).then(res => {
+    let sampleRates = res.map((sample, index) => ({
+      month: index + 1,
+      rate: currency.getExchangeRate(toCurrency, sample.rates)
+    }));
+
+    currency.calculateExchangeRate(sampleRates, nextDataPoint);
+  });
 }
 
 program

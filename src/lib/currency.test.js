@@ -19,15 +19,15 @@ describe('Currency library', () => {
     expect(currency.predictExchangeRate(sample.rates, sample.nextDataPoint)).toEqual(sample.exchangeRate);
   });
   test('return NaN if nextDataPoint is not provided or not a number', () => {
-    expect(currency.predictExchangeRate(sample.rates)).toEqual(NaN);
-    expect(currency.predictExchangeRate(sample.rates, 'something')).toEqual(NaN);
-    expect(currency.predictExchangeRate(sample.rates, [1, 2, 3])).toEqual(NaN);
-    expect(currency.predictExchangeRate(sample.rates, f => f)).toEqual(NaN);
-    expect(currency.predictExchangeRate(sample.rates, {})).toEqual(NaN);
+    expect(currency.predictExchangeRate(sample.rates)).toBeNaN();
+    expect(currency.predictExchangeRate(sample.rates, 'something')).toBeNaN();
+    expect(currency.predictExchangeRate(sample.rates, [1, 2, 3])).toBeNaN();
+    expect(currency.predictExchangeRate(sample.rates, f => f)).toBeNaN();
+    expect(currency.predictExchangeRate(sample.rates, {})).toBeNaN();
   });
   test('return NaN if sample rates is an invalid array.', () => {
-    expect(currency.predictExchangeRate([])).toEqual(NaN);
-    expect(currency.predictExchangeRate([1, 2, 3])).toEqual(NaN);
+    expect(currency.predictExchangeRate([])).toBeNaN();
+    expect(currency.predictExchangeRate([1, 2, 3])).toBeNaN();
   });
 
   /**
@@ -38,13 +38,13 @@ describe('Currency library', () => {
     expect(currency.getExchangeRate(rates, 'VND')).toEqual(rates.VND);
   });
   test('return undefined if currency is not provided or has wrong value', () => {
-    expect(currency.getExchangeRate(rates)).toEqual(undefined);
-    expect(currency.getExchangeRate(rates, 'something')).toEqual(undefined);
-    expect(currency.getExchangeRate(rates, 77)).toEqual(undefined);
-    expect(currency.getExchangeRate(rates, true)).toEqual(undefined);
-    expect(currency.getExchangeRate(rates, false)).toEqual(undefined);
-    expect(currency.getExchangeRate(rates, {})).toEqual(undefined);
-    expect(currency.getExchangeRate(rates, [])).toEqual(undefined);
-    expect(currency.getExchangeRate(rates, f => f)).toEqual(undefined);
+    expect(currency.getExchangeRate(rates)).toBeUndefined();
+    expect(currency.getExchangeRate(rates, 'something')).toBeUndefined();
+    expect(currency.getExchangeRate(rates, 77)).toBeUndefined();
+    expect(currency.getExchangeRate(rates, true)).toBeUndefined();
+    expect(currency.getExchangeRate(rates, false)).toBeUndefined();
+    expect(currency.getExchangeRate(rates, {})).toBeUndefined();
+    expect(currency.getExchangeRate(rates, [])).toBeUndefined();
+    expect(currency.getExchangeRate(rates, f => f)).toBeUndefined();
   });
 });

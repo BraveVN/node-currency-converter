@@ -12,7 +12,8 @@ const constants = require('./src/constants/constants');
 const nextDataPoint = constants.dateSample.length + 1;
 
 /**
- * Hanlde logic for predicting exchange rate
+ * Call the API request to get historical exchange rate.
+ * Calculate the rate based on historical data & show it.
  *
  * @param {string} fromCurrency
  * @param {string} toCurrency
@@ -26,16 +27,13 @@ const getExchangeRate = async (fromCurrency, toCurrency) => {
     }));
 
     let predictedValue = currency.predictExchangeRate(sampleRates, nextDataPoint);
-    console.log(predictedValue);
-    console.table({
-      date: '01/15/2017',
-      baseCurrency: fromCurrency,
-      destCurrency: toCurrency,
-      exchangeRate: predictedValue
-    });
+    console.log(`The predicted exchange rate from ${fromCurrency} to ${toCurrency} for 01/15/2017 is ${predictedValue}`);
   });
 }
 
+/**
+ * Define custom command by using "commander" library.
+ */
 program
   .version('0.0.1', '-v, --version' )
   .command('predict <fromCurrency> <toCurrency>')

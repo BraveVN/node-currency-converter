@@ -9,7 +9,7 @@ const program = require('commander');
 const axios = require('./src/services/axios');
 const currency = require('./src/lib/currency');
 const constants = require('./src/constants/constants');
-const nextDataPoint = constants.DATA_POINTS + 1;
+const nextDataPoint = constants.dateSample.length + 1;
 
 /**
  * Hanlde logic for predicting exchange rate
@@ -26,7 +26,13 @@ const getExchangeRate = async (fromCurrency, toCurrency) => {
     }));
 
     let predictedValue = currency.predictExchangeRate(sampleRates, nextDataPoint);
-    console.table({ date: '01/15/2017', baseCurrency: fromCurrency, destCurrency: toCurrency, exchangeRate: predictedValue });
+    console.log(predictedValue);
+    console.table({
+      date: '01/15/2017',
+      baseCurrency: fromCurrency,
+      destCurrency: toCurrency,
+      exchangeRate: predictedValue
+    });
   });
 }
 

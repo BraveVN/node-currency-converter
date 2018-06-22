@@ -178,4 +178,26 @@ describe('Helpers', () => {
     ]
     expect(helpers.calculateIntercept(inputArr)).toEqual(NaN);
   });
+
+  /**
+   * Test method helpers.formatDate()
+   */
+  test('return correct format date YYYY-MM-DD from input MM-DD-YYYY', () => {
+    expect(helpers.formatDate('01/15/2016')).toEqual('2016-01-15');
+  });
+  test('return NaN-NaN-NaN if input value has format DD-MM-YYYY', () => {
+    expect(helpers.formatDate('15/01/2016')).toEqual('NaN-NaN-NaN');
+  });
+  test('return NaN-NaN-NaN if input has nothing', () => {
+    expect(helpers.formatDate()).toEqual('NaN-NaN-NaN');
+  });
+  test('return NaN-NaN-NaN if input value is an object or function', () => {
+    expect(helpers.formatDate({})).toEqual('NaN-NaN-NaN');
+    expect(helpers.formatDate(f => f)).toEqual('NaN-NaN-NaN');
+  });
+  test('return 1970-01-01 if input value is only a number or boolean', () => {
+    expect(helpers.formatDate(777)).toEqual('1970-01-01');
+    expect(helpers.formatDate(true)).toEqual('1970-01-01');
+    expect(helpers.formatDate(false)).toEqual('1970-01-01');
+  });
 });

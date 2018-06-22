@@ -1,11 +1,11 @@
 const currency = require('./currency');
-const testConstants = require('../test/constants');
+const dummyData = require('../test/dummyData');
 
 describe('Currency library', () => {
   /**
    * Define data variables for tests
    */
-  let sample = testConstants.sample;
+  let sample = dummyData.sample;
   let rates = {
     EUR: 0.88905,
     SGD: 1.362117,

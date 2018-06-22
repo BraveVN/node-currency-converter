@@ -1,11 +1,11 @@
 const helpers = require('./helpers');
-const testConstants = require('../test/constants');
+const dummyData = require('../test/dummyData');
 
 describe('Helpers', () => {
   /**
    * Define variables & prepare data for tests
    */
-  let sample = testConstants.sample;
+  let sample = dummyData.sample;
 
   /**
    * Test method helpers.square()

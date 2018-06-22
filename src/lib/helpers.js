@@ -16,8 +16,8 @@ const round = require('lodash.round');
  * @param {array} sampleRates
  */
 const calculateSlope = sampleRates => {
-  let numerator = constants.DATA_POINTS * totalProduct(sampleRates) - totalMonth(sampleRates) * totalExchangeRate(sampleRates);
-  let denominator = constants.DATA_POINTS * totalSquareMonth(sampleRates) - square(totalMonth(sampleRates));
+  let numerator = sampleRates.length * totalProduct(sampleRates) - totalMonth(sampleRates) * totalExchangeRate(sampleRates);
+  let denominator = sampleRates.length * totalSquareMonth(sampleRates) - square(totalMonth(sampleRates));
   return round(numerator / denominator, 4);
 }
 
@@ -30,7 +30,7 @@ const calculateSlope = sampleRates => {
 const calculateIntercept = sampleRates => {
   let slope = calculateSlope(sampleRates);
   let numerator = totalExchangeRate(sampleRates) - slope * totalMonth(sampleRates);
-  let denominator = constants.DATA_POINTS;
+  let denominator = sampleRates.length;
   return round(numerator / denominator, 4);
 }
 
@@ -76,9 +76,27 @@ const totalProduct = sampleRates => sampleRates.reduce((accumulator, currentValu
  */
 const totalSquareMonth = sampleRates => sampleRates.reduce((accumulator, currentValue) => accumulator + square(currentValue.month), 0)
 
+/**
+ * Format input datetime into correct standard of API: YYYY-MM-DD
+ *
+ * @param {string} value
+ */
+const formatDate = value => {
+  let day = new Date(value);
+  let year = day.getFullYear();
+  let month = day.getMonth() + 1;
+  month = month < 10 ? '0' + month : month;
+
+  let date = day.getDate();
+  date = date < 10 ? '0' + date : date;
+
+  return `${year}-${month}-${date}`;
+}
+
 module.exports = {
   calculateIntercept,
   calculateSlope,
+  formatDate,
   product,
   square,
   totalExchangeRate,

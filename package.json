@@ -25,6 +25,7 @@
     "lodash.round": "^4.0.4"
   },
   "devDependencies": {
-    "jest": "^23.1.0"
+    "jest": "^23.1.0",
+    "nock": "^9.3.3"
   }
 }

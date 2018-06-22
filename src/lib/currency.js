@@ -12,6 +12,7 @@
  */
 const helpers = require('./helpers');
 const round = require('lodash.round');
+const errors = require('../constants/constants').errors;
 
 /**
  * Return exchange rate which is based on input currency
@@ -19,7 +20,12 @@ const round = require('lodash.round');
  * @param {object} rates
  * @param {string} currency
  */
-const getExchangeRate = (rates, currency) => rates[currency];
+const getExchangeRate = (rates, currency) => {
+  if (rates === null || typeof rates !== 'object') {
+    throw new TypeError(errors.typeObject);
+  }
+  return rates[currency];
+};
 
 /**
  * Return the predict exchange rate for the next data point based on sample data
@@ -28,9 +34,12 @@ const getExchangeRate = (rates, currency) => rates[currency];
  * @param {number} nextDataPoint
  */
 const predictExchangeRate = (sampleRates, nextDataPoint) => {
+  if (!Array.isArray(sampleRates)) {
+    throw new TypeError(errors.typeArray);
+  }
   let result = helpers.calculateIntercept(sampleRates) + helpers.calculateSlope(sampleRates) * nextDataPoint;
   return round(result, 4);
-}
+};
 
 module.exports = {
   predictExchangeRate,

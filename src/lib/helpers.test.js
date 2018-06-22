@@ -1,5 +1,6 @@
 const helpers = require('./helpers');
 const dummyData = require('../test/dummyData');
+const errors = require('../constants/constants').errors;
 
 describe('Helpers', () => {
   /**
@@ -29,7 +30,7 @@ describe('Helpers', () => {
     expect(helpers.square({ something: 'something' })).toBeNaN();
     expect(helpers.square(f => f)).toBeNaN();
     expect(helpers.square(undefined)).toBeNaN();
-  })
+  });
 
   /**
    * Test method helpers.product()
@@ -98,7 +99,6 @@ describe('Helpers', () => {
     expect(helpers.totalExchangeRate(inputArr)).toBeNaN();
   });
 
-
   /**
    * Test method helpers.totalProduct()
    */
@@ -108,15 +108,15 @@ describe('Helpers', () => {
   test('return 0 if input value is empty array', () => {
     expect(helpers.totalProduct([])).toBe(0);
   });
-  test('return NaN if input array has invalid format/ wrong data structure', () => {
+  test('throw error if input array has invalid format/ wrong data structure', () => {
     let inputArr = [1, 2, 3];
-    expect(helpers.totalProduct(inputArr)).toBeNaN();
+    expect(() => helpers.totalProduct(inputArr)).toThrowError(errors.typeObject);
 
     inputArr = [
       { foo: 'foo' },
       { bar: 'bar' }
-    ]
-    expect(helpers.totalProduct(inputArr)).toBeNaN();
+    ];
+    expect(() => helpers.totalProduct(inputArr)).toThrowError(errors.typeNumber);
   });
 
   /**
@@ -130,13 +130,13 @@ describe('Helpers', () => {
   });
   test('return NaN if input array has invalid format/ wrong data structure', () => {
     let inputArr = [1, 2, 3];
-    expect(helpers.totalSquareMonth(inputArr)).toBeNaN();
+    expect(() => helpers.totalSquareMonth(inputArr)).toThrowError(errors.typeObject);
 
     inputArr = [
       { foo: 'foo' },
       { bar: 'bar' }
-    ]
-    expect(helpers.totalSquareMonth(inputArr)).toBeNaN();
+    ];
+    expect(() => helpers.totalSquareMonth(inputArr)).toThrowError(errors.typeNumber);
   });
 
   /**
@@ -145,18 +145,28 @@ describe('Helpers', () => {
   test('return correct slope', () => {
     expect(helpers.calculateSlope(sample.rates)).toBe(sample.slope);
   });
-  test('return NaN if input value is an empty array/has invalid format or wrong data structure', () => {
+  test('throw error if input value is not an array', () => {
+    expect(() => helpers.calculateSlope()).toThrowError(errors.typeArray);
+    expect(() => helpers.calculateSlope(7)).toThrowError(errors.typeArray);
+    expect(() => helpers.calculateSlope('something')).toThrowError(errors.typeArray);
+    expect(() => helpers.calculateSlope(true)).toThrowError(errors.typeArray);
+    expect(() => helpers.calculateSlope({})).toThrowError(errors.typeArray);
+    expect(() => helpers.calculateSlope(null)).toThrowError(errors.typeArray);
+    expect(() => helpers.calculateSlope(undefined)).toThrowError(errors.typeArray);
+  });
+  test('return NaN if input value is an empty array', () => {
     let inputArr = [];
     expect(helpers.calculateSlope(inputArr)).toBeNaN();
-
-    inputArr = [1, 2, 3];
-    expect(helpers.calculateSlope(inputArr)).toBeNaN();
+  });
+  test('throw error if input value has invalid format or wrong data structure', () => {
+    inputArr = [1, 'something', false];
+    expect(() => helpers.calculateSlope(inputArr)).toThrowError(errors.typeObject);
 
     inputArr = [
       { foo: 'foo' },
       { bar: 'bar' }
-    ]
-    expect(helpers.calculateSlope(inputArr)).toBeNaN();
+    ];
+    expect(() => helpers.calculateSlope(inputArr)).toThrowError(errors.typeNumber);
   });
 
   /**
@@ -165,18 +175,19 @@ describe('Helpers', () => {
   test('return correct intercept', () => {
     expect(helpers.calculateIntercept(sample.rates)).toBe(sample.intercept);
   });
-  test('return NaN if input value is an empty array/has invalid format or wrong data structure', () => {
+  test('return NaN if input value is an empty array', () => {
     let inputArr = [];
     expect(helpers.calculateIntercept(inputArr)).toBeNaN();
-
-    inputArr = [1, 2, 3];
-    expect(helpers.calculateIntercept(inputArr)).toBeNaN();
+  });
+  test('throw error if input value has invalid format or wrong data structure', () => {
+    inputArr = [1, 'something', false];
+    expect(() => helpers.calculateIntercept(inputArr)).toThrowError(errors.typeObject);
 
     inputArr = [
       { foo: 'foo' },
       { bar: 'bar' }
-    ]
-    expect(helpers.calculateIntercept(inputArr)).toBeNaN();
+    ];
+    expect(() => helpers.calculateIntercept(inputArr)).toThrowError(errors.typeNumber);
   });
 
   /**
@@ -185,15 +196,11 @@ describe('Helpers', () => {
   test('return correct format date YYYY-MM-DD from input MM-DD-YYYY', () => {
     expect(helpers.formatDate('01/15/2016')).toBe('2016-01-15');
   });
-  test('return NaN-NaN-NaN if input value has format DD-MM-YYYY', () => {
-    expect(helpers.formatDate('15/01/2016')).toBe('NaN-NaN-NaN');
-  });
-  test('return NaN-NaN-NaN if input has nothing', () => {
-    expect(helpers.formatDate()).toBe('NaN-NaN-NaN');
-  });
-  test('return NaN-NaN-NaN if input value is an object or function', () => {
-    expect(helpers.formatDate({})).toBe('NaN-NaN-NaN');
-    expect(helpers.formatDate(f => f)).toBe('NaN-NaN-NaN');
+  test('throw error if input value is invalid', () => {
+    expect(() => helpers.formatDate('15/01/2016')).toThrowError(errors.invalidDate);
+    expect(() => helpers.formatDate()).toThrowError(errors.invalidDate);
+    expect(() => helpers.formatDate({})).toThrowError(errors.invalidDate);
+    expect(() => helpers.formatDate(f => f)).toThrowError(errors.invalidDate);
   });
   test('return 1970-01-01 if input value is only a number or boolean', () => {
     expect(helpers.formatDate(777)).toBe('1970-01-01');

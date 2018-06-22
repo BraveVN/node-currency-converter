@@ -1,13 +1,13 @@
 /**
- * This helper is used to define some helper methods for currency.js
+ * This helpers is used to define some helper methods for currency.js
  */
 'use strict';
 
 /**
  * Module dependencies.
  */
-const constants = require('../constants/constants');
 const round = require('lodash.round');
+const errors = require('../constants/constants').errors;
 
 /**
  * Calculate the slope of Linear Regression algorithm with formula:
@@ -16,10 +16,14 @@ const round = require('lodash.round');
  * @param {array} sampleRates
  */
 const calculateSlope = sampleRates => {
+  if (!Array.isArray(sampleRates)) {
+    throw new TypeError(errors.typeArray);
+  }
+
   let numerator = sampleRates.length * totalProduct(sampleRates) - totalMonth(sampleRates) * totalExchangeRate(sampleRates);
   let denominator = sampleRates.length * totalSquareMonth(sampleRates) - square(totalMonth(sampleRates));
   return round(numerator / denominator, 4);
-}
+};
 
 /**
  * Calculate the intercept of Linear Regression algorithm with formula:
@@ -28,11 +32,15 @@ const calculateSlope = sampleRates => {
  * @param {array} sampleRates
  */
 const calculateIntercept = sampleRates => {
+  if (!Array.isArray(sampleRates)) {
+    throw new TypeError(errors.typeArray);
+  }
+
   let slope = calculateSlope(sampleRates);
   let numerator = totalExchangeRate(sampleRates) - slope * totalMonth(sampleRates);
   let denominator = sampleRates.length;
   return round(numerator / denominator, 4);
-}
+};
 
 /**
  * Calculate square of a number (X^2)
@@ -67,14 +75,35 @@ const totalExchangeRate = sampleRates => sampleRates.reduce((accumulator, curren
  *
  * @param {array} sampleRates
  */
-const totalProduct = sampleRates => sampleRates.reduce((accumulator, currentValue) => accumulator + product(currentValue), 0)
+const totalProduct = sampleRates => {
+  return sampleRates.reduce((accumulator, currentValue) => {
+    if (typeof currentValue !== 'object') {
+      throw new TypeError(errors.typeObject);
+    }
+    if (typeof currentValue.month !== 'number' || typeof currentValue.rate !== 'number') {
+      throw new TypeError(errors.typeNumber);
+    }
+
+    return accumulator + product(currentValue);
+  }, 0);
+};
 
 /**
  * Calculate the total of square of month (ΣX^2)
  *
  * @param {array} sampleRates
  */
-const totalSquareMonth = sampleRates => sampleRates.reduce((accumulator, currentValue) => accumulator + square(currentValue.month), 0)
+const totalSquareMonth = sampleRates => {
+  return sampleRates.reduce((accumulator, currentValue) => {
+    if (typeof currentValue !== 'object') {
+      throw new TypeError(errors.typeObject);
+    }
+    if (typeof currentValue.month !== 'number') {
+      throw new TypeError(errors.typeNumber);
+    }
+    return accumulator + square(currentValue.month);
+  }, 0);
+};
 
 /**
  * Format input datetime into correct standard of API: YYYY-MM-DD
@@ -83,6 +112,10 @@ const totalSquareMonth = sampleRates => sampleRates.reduce((accumulator, current
  */
 const formatDate = value => {
   let day = new Date(value);
+  if (day.toString() === 'Invalid Date') {
+    throw new TypeError(errors.invalidDate);
+  }
+
   let year = day.getFullYear();
   let month = day.getMonth() + 1;
   month = month < 10 ? '0' + month : month;
@@ -91,7 +124,7 @@ const formatDate = value => {
   date = date < 10 ? '0' + date : date;
 
   return `${year}-${month}-${date}`;
-}
+};
 
 module.exports = {
   calculateIntercept,

@@ -13,7 +13,7 @@ describe('Axios request services', () => {
       .get('/historical/2017-01-15.json')
       .query({ base: base, app_id: '05f16dc30c6a4a50adc6ea2a6aa2a93f' })
       .reply(200, response);
-  })
+  });
 
   /**
    * Test method axios.Historical.fetch()
@@ -28,5 +28,4 @@ describe('Axios request services', () => {
       expect(typeof res.rates).toEqual('object');
     });
   });
-
 });

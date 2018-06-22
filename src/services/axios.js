@@ -36,7 +36,7 @@ const requests = {
       params['app_id'] = APP_ID;
       return axios.get(`${API_URL}/${options.endpoint}/${date}.json`, {params: params})
                   .then(responseBody)
-                  .catch(() => console.error('Something went wrong on API server!'));
+                  .catch(() => console.log('Something went wrong on API server!'));
     }
     throw 'Options is required.';
   }
@@ -55,4 +55,4 @@ const Historical = {
 
 module.exports = {
   Historical
-}
+};

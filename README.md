@@ -12,6 +12,10 @@ Based on the historical data of 12 months, this command will show you the predic
 4. Run `npm install`
 5. Run `npm link` to symbolic link our CLI app so we can use it. 
 
+## Testing
+
+Run `npm test` for testing the app. 
+
 ## How to use  
     exchange predict <from_currency> <to_currency>
     
